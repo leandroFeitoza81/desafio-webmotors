@@ -5,11 +5,10 @@ const getAll = async () => {
   return veiculos;
 };
 
-const publisher = async (marca, modelo, versao, ano, quilometragem, observacao) => {
+const createAnnouncement = async (marca, modelo, versao, ano, quilometragem, observacao) => {
   const published = await connection.execute(
     'INSERT INTO teste_webmotors.tb_AnuncioWebmotors(marca, modelo, versao, ano, quilometragem, observacao) VALUES(?,?,?,?,?,?)',
-    // eslint-disable-next-line comma-dangle
-    [marca, modelo, versao, ano, quilometragem, observacao]
+    [marca, modelo, versao, ano, quilometragem, observacao],
   );
   return published;
 };
@@ -17,7 +16,7 @@ const publisher = async (marca, modelo, versao, ano, quilometragem, observacao) 
 const update = async (marca, modelo, versao, ano, quilometragem, observacao, ID) => {
   const result = await connection.execute(
     `UPDATE tb_AnuncioWebmotors SET marca=?, modelo=?, versao=?, ano=?, quilometragem=?, observacao=? WHERE ID=${ID}`,
-    [marca, modelo, versao, ano, quilometragem, observacao]
+    [marca, modelo, versao, ano, quilometragem, observacao],
   );
   return result;
 };
@@ -29,7 +28,7 @@ const remove = async (id) => {
 
 module.exports = {
   getAll,
-  publisher,
+  createAnnouncement,
   update,
   remove,
 };

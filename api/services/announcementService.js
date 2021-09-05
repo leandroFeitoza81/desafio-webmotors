@@ -1,12 +1,13 @@
-const Model = require('../models/anuncioModels');
+const Model = require('../models/announcementModels');
+const httpResponse = require('../utils/httpResponse');
 
 const getAll = async () => Model.getAll();
 
-const publisher = async (marca, modelo, versao, ano, quilometragem, observacao) => {
+const createAnnouncement = async (marca, modelo, versao, ano, quilometragem, observacao) => {
   if (!marca || !modelo || !versao || !ano || !quilometragem || !observacao) {
-    return { error: 'Todos campos são requeridos' };
+    return { error: 'Campos obrigatorios' };
   }
-  await Model.publisher(marca, modelo, versao, ano, quilometragem, observacao);
+  await Model.createAnnouncement(marca, modelo, versao, ano, quilometragem, observacao);
 
   return { marca, modelo, versao, ano, quilometragem, observacao };
 };
@@ -23,7 +24,7 @@ const remove = async (id) => {
 
 module.exports = {
   getAll,
-  publisher,
+  createAnnouncement,
   update,
   remove,
 };
