@@ -2,16 +2,32 @@ const Service = require('../services/announcementService');
 const httpResponse = require('../utils/httpResponse');
 const statusCode = require('../utils/statusCode');
 
-const getAnuncios = async (req, res) => {
-  const result = await Service.getAll();
-  res.status(200).json(result);
+const readAllAnnouncement = async (req, res) => {
+  try {
+    const vehicles = await Service.readAllAnnouncement();
+    res.status(statusCode.OK).json(vehicles);
+  } catch (e) {
+    console.log(e);
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json(httpResponse.SERVER_ERROR);
+  }
+};
+
+const readAnnouncementByID = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const vehicle = await Service.readAnnouncementByID(id);
+    res.status(statusCode.OK).json(vehicle);
+  } catch (e) {
+    console.log(e);
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json(httpResponse.SERVER_ERROR);
+  }
 };
 
 const createAnnouncement = async (req, res) => {
   try {
     const { marca, modelo, versao, ano, quilometragem, observacao } = req.body;
 
-    const result = await Service.createAnnouncement(
+    const announcement = await Service.createAnnouncement(
       marca,
       modelo,
       versao,
@@ -19,44 +35,59 @@ const createAnnouncement = async (req, res) => {
       quilometragem,
       observacao,
     );
-    if (result.error) {
-      return res.status(statusCode.BAD_REQUEST).json(result.error);
+    console.log(announcement);
+    if (announcement.error) {
+      return res.status(statusCode.BAD_REQUEST).json(announcement.error);
     }
-    res.status(statusCode.OK).json(result);
+    res.status(statusCode.NOT_CONTENT).json(httpResponse.NOT_CONTENT);
   } catch (e) {
     console.log(e);
-    res.status(statusCode.INTERNAL_SERVER_ERROR).json(httpResponse.SERVER_ERROR.message);
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json(httpResponse.SERVER_ERROR);
   }
 };
 
-const update = async (req, res) => {
+const updateAnnouncement = async (req, res) => {
   try {
     const { marca, modelo, versao, ano, quilometragem, observacao } = req.body;
     const { id } = req.params;
     const ID = parseInt(id, 10);
 
-    const result = await Service.update(marca, modelo, versao, ano, quilometragem, observacao, ID);
-    return res.status(httpResponse.OK.code).json(result);
+    const announcementEdited = await Service.updateAnnouncement(
+      marca,
+      modelo,
+      versao,
+      ano,
+      quilometragem,
+      observacao,
+      ID,
+    );
+
+    if (announcementEdited.error) {
+      return res.status(statusCode.BAD_REQUEST).json(announcementEdited.error);
+    }
+
+    return res.status(statusCode.NOT_CONTENT).json(httpResponse.NOT_CONTENT);
   } catch (e) {
     console.log(e);
-    res.status(httpResponse.SERVER_ERROR.code).json(httpResponse.SERVER_ERROR.message);
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json(httpResponse.SERVER_ERROR);
   }
 };
 
-const remove = async (req, res) => {
+const removeAnnouncement = async (req, res) => {
   try {
     const { id } = req.params;
-    await Service.remove(id);
-    res.status(httpResponse.NO_CONTENT.code).json(httpResponse.NO_CONTENT.message);
+    await Service.removeAnnouncement(id);
+    res.status(statusCode.NOT_CONTENT).json(httpResponse.NOT_CONTENT);
   } catch (e) {
     console.log(e);
-    res.status(httpResponse.SERVER_ERROR.code).json(httpResponse.SERVER_ERROR.message);
+    res.status(statusCode.INTERNAL_SERVER_ERROR).json(httpResponse.SERVER_ERROR);
   }
 };
 
 module.exports = {
-  getAnuncios,
+  readAllAnnouncement,
+  readAnnouncementByID,
   createAnnouncement,
-  update,
-  remove,
+  updateAnnouncement,
+  removeAnnouncement,
 };

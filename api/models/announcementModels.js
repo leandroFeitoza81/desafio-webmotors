@@ -1,8 +1,15 @@
 const connection = require('../database/connections');
 
-const getAll = async () => {
-  const [veiculos] = await connection.execute('SELECT * FROM teste_webmotors.tb_AnuncioWebmotors');
-  return veiculos;
+const readAllAnnouncement = async () => {
+  const [vehicles] = await connection.execute('SELECT * FROM tb_AnuncioWebmotors');
+  return vehicles;
+};
+
+const readAnnouncementByID = async (id) => {
+  const [vehicle] = await connection.execute('SELECT * FROM tb_AnuncioWebmotors WHERE ID = ?', [
+    id,
+  ]);
+  return vehicle;
 };
 
 const createAnnouncement = async (marca, modelo, versao, ano, quilometragem, observacao) => {
@@ -13,7 +20,7 @@ const createAnnouncement = async (marca, modelo, versao, ano, quilometragem, obs
   return published;
 };
 
-const update = async (marca, modelo, versao, ano, quilometragem, observacao, ID) => {
+const updateAnnouncement = async (marca, modelo, versao, ano, quilometragem, observacao, ID) => {
   const result = await connection.execute(
     `UPDATE tb_AnuncioWebmotors SET marca=?, modelo=?, versao=?, ano=?, quilometragem=?, observacao=? WHERE ID=${ID}`,
     [marca, modelo, versao, ano, quilometragem, observacao],
@@ -21,14 +28,15 @@ const update = async (marca, modelo, versao, ano, quilometragem, observacao, ID)
   return result;
 };
 
-const remove = async (id) => {
+const removeAnnouncement = async (id) => {
   const result = await connection.execute('DELETE FROM tb_AnuncioWebmotors WHERE ID = ?', [id]);
   return result;
 };
 
 module.exports = {
-  getAll,
+  readAllAnnouncement,
+  readAnnouncementByID,
   createAnnouncement,
-  update,
-  remove,
+  updateAnnouncement,
+  removeAnnouncement,
 };

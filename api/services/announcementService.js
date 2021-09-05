@@ -1,30 +1,45 @@
 const Model = require('../models/announcementModels');
 const httpResponse = require('../utils/httpResponse');
 
-const getAll = async () => Model.getAll();
+const readAllAnnouncement = async () => Model.readAllAnnouncement();
+
+const readAnnouncementByID = async (id) => Model.readAnnouncementByID(id);
 
 const createAnnouncement = async (marca, modelo, versao, ano, quilometragem, observacao) => {
   if (!marca || !modelo || !versao || !ano || !quilometragem || !observacao) {
-    return { error: 'Campos obrigatorios' };
+    return { error: httpResponse.BAD_REQUEST };
   }
+
   await Model.createAnnouncement(marca, modelo, versao, ano, quilometragem, observacao);
 
   return { marca, modelo, versao, ano, quilometragem, observacao };
 };
 
-const update = async (marca, modelo, versao, ano, quilometragem, observacao, ID) => {
-  const result = await Model.update(marca, modelo, versao, ano, quilometragem, observacao, ID);
-  return result;
+const updateAnnouncement = async (marca, modelo, versao, ano, quilometragem, observacao, ID) => {
+  if (!marca || !modelo || !versao || !ano || !quilometragem || !observacao) {
+    return { error: httpResponse.BAD_REQUEST };
+  }
+  const announcementEdited = await Model.updateAnnouncement(
+    marca,
+    modelo,
+    versao,
+    ano,
+    quilometragem,
+    observacao,
+    ID,
+  );
+  return announcementEdited;
 };
 
-const remove = async (id) => {
-  const result = await Model.remove(id);
-  return result;
+const removeAnnouncement = async (id) => {
+  const announcementRemoved = await Model.removeAnnouncement(id);
+  return announcementRemoved;
 };
 
 module.exports = {
-  getAll,
+  readAllAnnouncement,
+  readAnnouncementByID,
   createAnnouncement,
-  update,
-  remove,
+  updateAnnouncement,
+  removeAnnouncement,
 };
