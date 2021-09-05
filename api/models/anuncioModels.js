@@ -14,7 +14,22 @@ const publisher = async (marca, modelo, versao, ano, quilometragem, observacao) 
   return published;
 };
 
+const update = async (marca, modelo, versao, ano, quilometragem, observacao, ID) => {
+  const result = await connection.execute(
+    `UPDATE tb_AnuncioWebmotors SET marca=?, modelo=?, versao=?, ano=?, quilometragem=?, observacao=? WHERE ID=${ID}`,
+    [marca, modelo, versao, ano, quilometragem, observacao]
+  );
+  return result;
+};
+
+const remove = async (id) => {
+  const result = await connection.execute('DELETE FROM tb_AnuncioWebmotors WHERE ID = ?', [id]);
+  return result;
+};
+
 module.exports = {
   getAll,
   publisher,
+  update,
+  remove,
 };

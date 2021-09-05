@@ -10,6 +10,8 @@ app.use(express.json());
 
 app.get('/api', api.getAnuncios);
 app.post('/api', api.publisher);
+app.put('/api/:id', api.update);
+app.delete('/api/:id', api.remove);
 
 app.listen(PORT);
 console.log(`Serever escutando na porta --> ${PORT}`);
